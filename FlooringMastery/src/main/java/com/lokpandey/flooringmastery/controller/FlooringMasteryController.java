@@ -7,15 +7,18 @@
 
 package com.lokpandey.flooringmastery.controller;
 
-import com.lokpandey.flooringmastery.dao.FlooringMasteryPersistenceException;
+import com.lokpandey.flooringmastery.model.Order;
 import com.lokpandey.flooringmastery.service.FlooringMasteryServiceLayerImpl;
+import com.lokpandey.flooringmastery.service.InvalidDateException;
 import com.lokpandey.flooringmastery.view.FlooringMasteryView;
+import java.io.FileNotFoundException;
+import java.util.List;
 
 
 public class FlooringMasteryController {
     
-    private FlooringMasteryView view;
-    private FlooringMasteryServiceLayerImpl service;
+    private final FlooringMasteryView view;
+    private final FlooringMasteryServiceLayerImpl service;
 
     public FlooringMasteryController(FlooringMasteryView view, FlooringMasteryServiceLayerImpl service) {
         this.view = view;
@@ -23,7 +26,6 @@ public class FlooringMasteryController {
     }
     
     public void run() {
-        
         boolean keepGoing = true;
         int menuSelection;
         try {
@@ -31,6 +33,7 @@ public class FlooringMasteryController {
                 menuSelection = getMenuSelection();
                 switch (menuSelection) {
                     case 1:
+                        displayOrders();
                         break;
                     case 2:
                         break;
@@ -48,14 +51,35 @@ public class FlooringMasteryController {
                 }
             }
             exitMessage();
-        } catch (/*FlooringMasteryPersistenceException*/ Exception e) {
-            view.displayErrorMessage(e.getMessage());
+        } catch (/*FlooringMasteryPersistenceException*/ Exception fmpe) {
+            view.displayErrorMessage(fmpe.getMessage());
         }
-        
     }
         
     private int getMenuSelection() {
         return view.displayMenuAndGetSelection();
+    }
+    
+    private void displayOrders() {
+        
+        String dateString = null;
+        List<Order> orderList = null;
+        boolean repeatAgain;
+        do {
+            dateString = view.getDateInfo();
+            try {
+                orderList = service.readOrdersFromFile(dateString);
+                repeatAgain = false;
+            } catch(InvalidDateException ide) {
+                view.displayErrorMessage(ide.getMessage());
+                repeatAgain = true;
+            } catch(FileNotFoundException fnfe) {
+                view.displayErrorMessage(fnfe.getMessage());
+                repeatAgain = false;
+            }
+        }while(repeatAgain);
+        
+        view.displayOrderList(orderList);
     }
     
     private void unknownCommand() {
