@@ -9,6 +9,7 @@ package com.lokpandey.flooringmastery.model;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 
 
 public class Order {
@@ -59,6 +60,72 @@ public class Order {
         this.laborCost = laborCost;
         this.tax = tax;
         this.total = total;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 79 * hash + Objects.hashCode(this.orderNumber);
+        hash = 79 * hash + Objects.hashCode(this.customerName);
+        hash = 79 * hash + Objects.hashCode(this.state);
+        hash = 79 * hash + Objects.hashCode(this.taxRate);
+        hash = 79 * hash + Objects.hashCode(this.productType);
+        hash = 79 * hash + Objects.hashCode(this.area);
+        hash = 79 * hash + Objects.hashCode(this.costPerSquareFoot);
+        hash = 79 * hash + Objects.hashCode(this.laborCostPerSquareFoot);
+        hash = 79 * hash + Objects.hashCode(this.materialCost);
+        hash = 79 * hash + Objects.hashCode(this.laborCost);
+        hash = 79 * hash + Objects.hashCode(this.tax);
+        hash = 79 * hash + Objects.hashCode(this.total);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Order other = (Order) obj;
+        if (!Objects.equals(this.customerName, other.customerName)) {
+            return false;
+        }
+        if (!Objects.equals(this.state, other.state)) {
+            return false;
+        }
+        if (!Objects.equals(this.productType, other.productType)) {
+            return false;
+        }
+        if (!Objects.equals(this.orderNumber, other.orderNumber)) {
+            return false;
+        }
+        if (!Objects.equals(this.taxRate, other.taxRate)) {
+            return false;
+        }
+        if (!Objects.equals(this.area, other.area)) {
+            return false;
+        }
+        if (!Objects.equals(this.costPerSquareFoot, other.costPerSquareFoot)) {
+            return false;
+        }
+        if (!Objects.equals(this.laborCostPerSquareFoot, other.laborCostPerSquareFoot)) {
+            return false;
+        }
+        if (!Objects.equals(this.materialCost, other.materialCost)) {
+            return false;
+        }
+        if (!Objects.equals(this.laborCost, other.laborCost)) {
+            return false;
+        }
+        if (!Objects.equals(this.tax, other.tax)) {
+            return false;
+        }
+        return Objects.equals(this.total, other.total);
     }
 
     

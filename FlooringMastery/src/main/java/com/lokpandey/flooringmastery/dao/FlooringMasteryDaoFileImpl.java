@@ -12,7 +12,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -20,13 +19,22 @@ import java.util.Scanner;
 
 public class FlooringMasteryDaoFileImpl implements FlooringMasteryDao {
 
+    private final String ORDERS_FOLDER;
     private static final String DELIMITER = ",";
+    
+    public FlooringMasteryDaoFileImpl() {
+        ORDERS_FOLDER = "Orders/";
+    }
+
+    public FlooringMasteryDaoFileImpl(String ORDERS_FOLDER) {
+        this.ORDERS_FOLDER = ORDERS_FOLDER;
+    }
     
     @Override
     public List<Order> selectAllFromOrders(String fileName) 
             throws FileNotFoundException {
         
-        String filePath = "Orders/"+fileName;
+        String filePath = ORDERS_FOLDER+fileName;
         Scanner scanner;
         try {
             // Create Scanner for reading the file
