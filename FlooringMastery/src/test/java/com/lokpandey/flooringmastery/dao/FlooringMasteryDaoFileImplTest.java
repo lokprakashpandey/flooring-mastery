@@ -9,12 +9,12 @@ package com.lokpandey.flooringmastery.dao;
 import com.lokpandey.flooringmastery.model.Order;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
@@ -29,7 +29,10 @@ public class FlooringMasteryDaoFileImplTest {
     
     @BeforeEach
     public void setUp() {
-        testDao = new FlooringMasteryDaoFileImpl("TestOrders/");
+        //testDao = new FlooringMasteryDaoFileImpl("TestOrders/");
+        ApplicationContext ctx = 
+                    new ClassPathXmlApplicationContext("applicationContext.xml");
+        testDao = ctx.getBean("flooringMasteryDao", FlooringMasteryDaoFileImpl.class);
     }
 
     
