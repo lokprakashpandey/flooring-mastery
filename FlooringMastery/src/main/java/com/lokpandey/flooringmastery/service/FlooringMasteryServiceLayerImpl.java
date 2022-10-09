@@ -28,21 +28,35 @@ public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLa
 
     @Override
     public List<Order> readOrdersFromFile(String dateString) 
-            throws FileNotFoundException, InvalidDateException {
-        String fileName = null;
+            throws FileNotFoundException, InvalidDataException {
+        LocalDate orderDate = parseDate(dateString);
+            
+        String dateParts[] = dateString.split("-");
+            
+        String fileName = "Orders_"+dateParts[1]+dateParts[2]+dateParts[0]+".txt";
         
-        try {
-            LocalDate orderDate = LocalDate.parse(dateString);
-            
-            String dateParts[] = dateString.split("-");
-            
-            fileName = "Orders_"+dateParts[1]+dateParts[2]+dateParts[0]+".txt";
-        } catch(DateTimeParseException e) {
-            throw new InvalidDateException("Invalid date - " + dateString);
-        }
         return dao.selectAllFromOrders(fileName);
     }
+
+    @Override
+    public boolean isFutureDate(String dateString) throws InvalidDataException {
+        LocalDate futureDate = parseDate(dateString);
+        return futureDate.isAfter(LocalDate.now());
+    }
     
-    
+    private LocalDate parseDate(String dateString) throws InvalidDataException {
+        LocalDate date;
+        try {
+            date = LocalDate.parse(dateString);
+        } catch(DateTimeParseException dtpe) {
+            throw new InvalidDataException("Invalid date - " + dateString);
+        }
+        return date;
+    }
+
+    @Override
+    public boolean validate(String customerName) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
 }

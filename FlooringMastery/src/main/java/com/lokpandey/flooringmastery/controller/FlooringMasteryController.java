@@ -9,7 +9,7 @@ package com.lokpandey.flooringmastery.controller;
 
 import com.lokpandey.flooringmastery.model.Order;
 import com.lokpandey.flooringmastery.service.FlooringMasteryServiceLayerImpl;
-import com.lokpandey.flooringmastery.service.InvalidDateException;
+import com.lokpandey.flooringmastery.service.InvalidDataException;
 import com.lokpandey.flooringmastery.view.FlooringMasteryView;
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -36,6 +36,7 @@ public class FlooringMasteryController {
                         displayOrders();
                         break;
                     case 2:
+                        addOrder();
                         break;
                     case 3:
                         break;
@@ -62,7 +63,7 @@ public class FlooringMasteryController {
     
     private void displayOrders() {
         
-        String dateString = null;
+        String dateString;
         List<Order> orderList = null;
         boolean repeatAgain;
         do {
@@ -70,7 +71,7 @@ public class FlooringMasteryController {
             try {
                 orderList = service.readOrdersFromFile(dateString);
                 repeatAgain = false;
-            } catch(InvalidDateException ide) {
+            } catch(InvalidDataException ide) {
                 view.displayErrorMessage(ide.getMessage());
                 repeatAgain = true;
             } catch(FileNotFoundException fnfe) {
@@ -80,6 +81,32 @@ public class FlooringMasteryController {
         }while(repeatAgain);
         
         view.displayOrderList(orderList);
+    }
+    
+    private void addOrder() {
+        String dateString;
+        boolean futureDateFound = false;
+        do {
+            dateString = view.getDateInfo();
+            try {
+                if(service.isFutureDate(dateString)) {
+                    futureDateFound = true;
+                }
+                else {
+                    view.displayErrorMessage("Date must be in future"); 
+                }
+            } catch(InvalidDataException ide) {
+                view.displayErrorMessage(ide.getMessage());
+            }
+            
+        }while(!futureDateFound);
+        
+        String customerName = view.getCustomerName();
+        while(true) {
+            if(service.validate(customerName)) break;
+        }
+        
+        
     }
     
     private void unknownCommand() {

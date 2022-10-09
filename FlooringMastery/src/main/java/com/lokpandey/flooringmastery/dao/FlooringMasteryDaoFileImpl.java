@@ -42,7 +42,7 @@ public class FlooringMasteryDaoFileImpl implements FlooringMasteryDao {
                     new BufferedReader(
                             new FileReader(filePath)));
         } catch (FileNotFoundException fnfe) {
-           throw fnfe;
+           throw new FileNotFoundException("The file " + fileName + " does not exist");
         }
         
         // currentLine holds the most recent line read from the file

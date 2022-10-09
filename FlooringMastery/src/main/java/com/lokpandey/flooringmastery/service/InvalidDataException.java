@@ -8,13 +8,13 @@
 package com.lokpandey.flooringmastery.service;
 
 
-public class InvalidDateException extends Exception {
+public class InvalidDataException extends Exception {
 
-    public InvalidDateException(String message) {
+    public InvalidDataException(String message) {
         super(message);
     }
 
-    public InvalidDateException(String message, Throwable cause) {
+    public InvalidDataException(String message, Throwable cause) {
         super(message, cause);
     }
     

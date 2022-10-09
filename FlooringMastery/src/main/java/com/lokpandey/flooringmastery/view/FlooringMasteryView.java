@@ -32,15 +32,19 @@ public class FlooringMasteryView {
         io.print("* 6. Quit");
         io.print("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *");
 
-        return io.readInt("Please select from the above choices:", 1, 6);
+        return io.readInt("Please select from the above choices: ", 1, 6);
     }
     
     public String getDateInfo() {
-        return io.readString("Please enter date (yyyy-MM-dd):");
+        return io.readString("Please enter date (yyyy-MM-dd): ");
+    }
+    
+    public String getCustomerName() {
+        return io.readString("Please enter customer name: ");
     }
     
     public void displayOrderList(List<Order> list) {
-        if(list == null) io.print("No any orders exist");
+        if(list == null) io.print("*** There are no orders ***");
         else {
             String headerString = "";
             //Using reflection to get all the attribute names of Order class 
