@@ -39,7 +39,7 @@ public interface FlooringMasteryServiceLayer {
     boolean isFutureDate(String dateString) throws InvalidDataException;
     
     /**
-     * Checks if the customer name given belongs satisfies a pattern for name.
+     * Checks if the customer name given satisfies a pattern for name.
      * The pattern is it may not be blank, allowed to contain [a-z][0-9] 
      * as well as periods and comma characters. For e.g., "Acme, Inc." is a valid name.
      * 

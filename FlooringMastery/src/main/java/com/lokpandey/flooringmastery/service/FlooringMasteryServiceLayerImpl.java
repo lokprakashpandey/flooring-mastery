@@ -14,6 +14,8 @@ import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLayer {
@@ -56,7 +58,11 @@ public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLa
 
     @Override
     public boolean validate(String customerName) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        //Since there is plus, the name cannot be blank
+        String regex = "^[a-zA-Z]+[ ,.a-zA-Z]*$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(customerName);
+        return matcher.matches();
     }
 
 }

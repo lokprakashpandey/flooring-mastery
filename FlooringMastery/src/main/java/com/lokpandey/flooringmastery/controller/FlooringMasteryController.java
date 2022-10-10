@@ -101,10 +101,14 @@ public class FlooringMasteryController {
             
         }while(!futureDateFound);
         
-        String customerName = view.getCustomerName();
+        String customerName; 
         while(true) {
+            customerName = view.getCustomerName();
             if(service.validate(customerName)) break;
+            else view.displayErrorMessage("Invalid name. Please make sure that name may not "
+                                  + "be blank and only spaces, periods and commas are allowed");
         }
+        
         
         
     }
