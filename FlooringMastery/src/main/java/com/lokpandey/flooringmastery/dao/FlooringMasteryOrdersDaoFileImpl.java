@@ -2,7 +2,7 @@
  * @author Lok Prakash Pandey
  * email: lokprakashpandey@gmail.com
  * date: Oct 06, 2022
- * purpose: Implementation of the FlooringMasteryDao interface
+ * purpose: Implementation of the FlooringMasteryOrdersDao interface
  */
 
 package com.lokpandey.flooringmastery.dao;
@@ -11,22 +11,26 @@ import com.lokpandey.flooringmastery.model.Order;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-
-public class FlooringMasteryDaoFileImpl implements FlooringMasteryDao {
+public class FlooringMasteryOrdersDaoFileImpl implements FlooringMasteryOrdersDao {
 
     private final String ORDERS_FOLDER;
     private static final String DELIMITER = ",";
     
-    public FlooringMasteryDaoFileImpl() {
+    public FlooringMasteryOrdersDaoFileImpl() {
         ORDERS_FOLDER = "Orders/";
     }
 
-    public FlooringMasteryDaoFileImpl(String ORDERS_FOLDER) {
+    public FlooringMasteryOrdersDaoFileImpl(String ORDERS_FOLDER) {
         this.ORDERS_FOLDER = ORDERS_FOLDER;
     }
     
@@ -103,5 +107,120 @@ public class FlooringMasteryDaoFileImpl implements FlooringMasteryDao {
         
     }
 
+    @Override
+    public int selectOrderNumber() throws FlooringMasteryPersistenceException
+    {
+        String filePath = "Order_Number_Tracker.txt";
+        int nextOrderNumber = 0;
+        if(Files.exists(Paths.get(filePath))) {
+            Scanner scanner = null;
+            try {
+                scanner = new Scanner(
+                        new BufferedReader(
+                                new FileReader(filePath)));
+            } catch (FileNotFoundException ex) {
+                throw new FlooringMasteryPersistenceException("The order number be read");
+            }
+            String currentOrderNumberString = scanner.nextLine();
+            nextOrderNumber = Integer.valueOf(currentOrderNumberString) + 1;
+            scanner.close();
+        }
+        else {
+            nextOrderNumber = 1;
+            }
+        return nextOrderNumber;        
+    }
     
+    private void createOrderNumberTrackerFile(int currentOrderNumber) 
+            throws FlooringMasteryPersistenceException {
+        
+        String filePath = "Order_Number_Tracker.txt";
+        PrintWriter out;
+        try {
+                out = new PrintWriter(new FileWriter(filePath));
+            } catch (IOException e) {
+                throw new FlooringMasteryPersistenceException("Could not save order number.", e);
+            }
+            
+            out.println(currentOrderNumber);
+            out.flush();
+    }
+
+    @Override
+    public void createOrder(Order order, String fileName) 
+                throws FlooringMasteryPersistenceException {
+        String ordersFilePath = ORDERS_FOLDER + fileName;
+        PrintWriter out;
+        if(!Files.exists(Paths.get(ordersFilePath))) {
+            try { 
+                out = new PrintWriter(new FileWriter(ordersFilePath));
+                out.println("OrderNumber,CustomerName,State,TaxRate,ProductType,"
+                        + "Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,"
+                        + "LaborCost,Tax,Total");
+                out.flush();
+            } catch (IOException ex) {
+                throw new FlooringMasteryPersistenceException("Could not create order file.", ex);
+            }
+        }
+        else {
+            try {
+                out = new PrintWriter(new FileWriter(ordersFilePath, true));
+            } catch(IOException ex) {
+                throw new FlooringMasteryPersistenceException("Could not open order file", ex);
+            }
+        }
+        
+        String orderString = order.getOrderNumber() + "," +
+                                order.getCustomerName() + "," +
+                                order.getState() + "," + 
+                                order.getTaxRate() + "," +
+                                order.getProductType() + "," +
+                                order.getArea() + "," +
+                                order.getCostPerSquareFoot() + "," +
+                                order.getLaborCostPerSquareFoot() + "," +
+                                order.getMaterialCost() + "," +
+                                order.getLaborCost() + "," +
+                                order.getTax() + "," +
+                                order.getTotal();
+        out.println(orderString);
+        out.flush();
+        createOrderNumberTrackerFile(order.getOrderNumber());
+        out.close();
+    }
+
+    @Override
+    public void createOrders(List<Order> sortedOrderList, String fileName) 
+            throws FlooringMasteryPersistenceException {
+        String ordersFilePath = ORDERS_FOLDER + fileName;
+        PrintWriter out;
+        try { 
+            //blanking the file
+            out = new PrintWriter(new FileWriter(ordersFilePath));
+            out.println("OrderNumber,CustomerName,State,TaxRate,ProductType,"
+                    + "Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,"
+                    + "LaborCost,Tax,Total");
+            out.flush();
+        } catch (IOException ex) {
+            throw new FlooringMasteryPersistenceException("Could not create order file.", ex);
+        }
+        
+        String orderString;
+        for(Order sortedOrder: sortedOrderList) {
+            orderString = sortedOrder.getOrderNumber() + "," +
+                                sortedOrder.getCustomerName() + "," +
+                                sortedOrder.getState() + "," + 
+                                sortedOrder.getTaxRate() + "," +
+                                sortedOrder.getProductType() + "," +
+                                sortedOrder.getArea() + "," +
+                                sortedOrder.getCostPerSquareFoot() + "," +
+                                sortedOrder.getLaborCostPerSquareFoot() + "," +
+                                sortedOrder.getMaterialCost() + "," +
+                                sortedOrder.getLaborCost() + "," +
+                                sortedOrder.getTax() + "," +
+                                sortedOrder.getTotal();
+            out.println(orderString);
+            out.flush();
+        }
+        out.close();
+    }
 }

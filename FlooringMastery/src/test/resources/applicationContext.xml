@@ -16,12 +16,25 @@
           http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
 
     <!-- Bean definitions go here -->
-    <bean id="flooringMasteryDao" 
-       class="com.lokpandey.flooringmastery.dao.FlooringMasteryDaoFileImpl">
-        <constructor-arg value="TestOrders/"/>
+    <bean id="ordersDao" 
+       class="com.lokpandey.flooringmastery.dao.FlooringMasteryOrdersDaoFileImpl">
+        <constructor-arg value="Orders/"/>
     </bean>
     
-
-
+    <bean id="productsDao" 
+          class="com.lokpandey.flooringmastery.dao.FlooringMasteryProductsDaoFileImpl">
+        <constructor-arg value="Data/"/>
+    </bean>
+    
+    <bean id="taxesDao" 
+          class="com.lokpandey.flooringmastery.dao.FlooringMasteryTaxesDaoFileImpl">
+        <constructor-arg value="Data/"/>
+    </bean>
+    
+    <bean id="backupDao"
+            class="com.lokpandey.flooringmastery.dao.FlooringMasteryBackupDaoFileImpl">
+        <constructor-arg value="Backup/"/>
+        <constructor-arg ref="ordersDao"/>
+    </bean>
 
 </beans>

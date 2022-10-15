@@ -27,6 +27,11 @@ public class Order {
     private final BigDecimal tax;
     private final BigDecimal total;
 
+    @Override
+    public String toString() {
+        return "Order{" + "orderNumber=" + orderNumber + ", customerName=" + customerName + ", state=" + state + ", taxRate=" + taxRate + ", productType=" + productType + ", area=" + area + ", costPerSquareFoot=" + costPerSquareFoot + ", laborCostPerSquareFoot=" + laborCostPerSquareFoot + ", materialCost=" + materialCost + ", laborCost=" + laborCost + ", tax=" + tax + ", total=" + total + '}';
+    }
+
     public Order(Integer orderNumber, String customerName, String state, BigDecimal taxRate, 
                  String productType, BigDecimal area, BigDecimal costPerSquareFoot, 
                  BigDecimal laborCostPerSquareFoot) {
