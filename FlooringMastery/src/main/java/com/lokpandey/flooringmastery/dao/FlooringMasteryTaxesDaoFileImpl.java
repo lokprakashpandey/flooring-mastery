@@ -18,15 +18,15 @@ import java.util.Scanner;
 
 public class FlooringMasteryTaxesDaoFileImpl implements FlooringMasteryTaxesDao {
 
-    private final String TAXES_FILEPATH;
+    private final String TAXES_FOLDER;
     private static final String DELIMITER = ",";
 
     public FlooringMasteryTaxesDaoFileImpl() {
-        TAXES_FILEPATH = "Data/Taxes.txt";
+        TAXES_FOLDER = "Data/";
     }
 
-    public FlooringMasteryTaxesDaoFileImpl(String TAXES_FILEPATH) {
-        this.TAXES_FILEPATH = TAXES_FILEPATH;
+    public FlooringMasteryTaxesDaoFileImpl(String TAXES_FOLDER) {
+        this.TAXES_FOLDER = TAXES_FOLDER;
     }
         
     @Override
@@ -34,13 +34,14 @@ public class FlooringMasteryTaxesDaoFileImpl implements FlooringMasteryTaxesDao 
             throws FileNotFoundException, CannotSellException {
         
         Scanner scanner;
+        String filePath = TAXES_FOLDER + "Taxes.txt";
         try {
             // Create Scanner for reading the file
             scanner = new Scanner( 
                     new BufferedReader(
-                            new FileReader(TAXES_FILEPATH)));
+                            new FileReader(filePath)));
         } catch (FileNotFoundException fnfe) {
-           throw new FileNotFoundException("The file " + TAXES_FILEPATH + " does not exist");
+           throw new FileNotFoundException("The file " + filePath + " does not exist");
         }
         
         // currentLine holds the most recent line read from the file
