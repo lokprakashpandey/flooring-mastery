@@ -185,8 +185,8 @@ public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLa
     }
 
     @Override
-    public void exportAllOrders() throws FlooringMasteryPersistenceException {
-        backupDao.exportAllOrders();
+    public List<Order> exportAllOrders() throws FlooringMasteryPersistenceException {
+        return backupDao.exportAllOrders();
     }
     
         

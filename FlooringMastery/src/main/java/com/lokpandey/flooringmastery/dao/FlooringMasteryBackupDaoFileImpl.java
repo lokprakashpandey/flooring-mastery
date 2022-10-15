@@ -41,7 +41,7 @@ public class FlooringMasteryBackupDaoFileImpl implements FlooringMasteryBackupDa
     }
     
     @Override
-    public void exportAllOrders() throws FlooringMasteryPersistenceException {
+    public List<Order> exportAllOrders() throws FlooringMasteryPersistenceException {
         String filePath = BACKUP_FOLDER+"DataExport.txt";
         
         //get all the orders in a list by reading all files in the Orders folder
@@ -92,9 +92,7 @@ public class FlooringMasteryBackupDaoFileImpl implements FlooringMasteryBackupDa
             out.close();
         } catch (IOException ex) {
             throw new FlooringMasteryPersistenceException("Could not create export file.", ex);
-        }
-        
-    
+        }        
+    return sortedAllOrdersList;
     }
-
 }

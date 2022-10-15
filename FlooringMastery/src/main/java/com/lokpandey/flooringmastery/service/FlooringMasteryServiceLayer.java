@@ -166,12 +166,12 @@ public interface FlooringMasteryServiceLayer {
     
     /**
      * Exports all the orders data from the different orders files into a single file
-     *
+     * and returns the sorted list of those orders
      * @param void 
-     * @return void if file exists otherwise 
+     * @return List<Order> from different orders files 
      * @throws FlooringMasteryPersistenceException when export file cannot be created 
     */
-    public void exportAllOrders() 
+    public List<Order> exportAllOrders() 
             throws FlooringMasteryPersistenceException;
     
 }
