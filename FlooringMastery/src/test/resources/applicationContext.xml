@@ -36,5 +36,22 @@
         <constructor-arg value="Backup/"/>
         <constructor-arg ref="ordersDao"/>
     </bean>
-
+    
+    <!-- Stub implementations for testing service layer -->
+    <bean id="ordersDaoStub" 
+            class="com.lokpandey.flooringmastery.dao.FlooringMasteryOrdersDaoStubImpl"/>
+    <bean id="productsDaoStub" 
+            class="com.lokpandey.flooringmastery.dao.FlooringMasteryProductsDaoStubImpl"/>
+    <bean id="taxesDaoStub" 
+            class="com.lokpandey.flooringmastery.dao.FlooringMasteryTaxesDaoStubImpl"/>
+    <bean id="backupDaoStub"
+            class="com.lokpandey.flooringmastery.dao.FlooringMasteryBackupDaoStubImpl"/>
+    <bean id="serviceLayer"
+            class="com.lokpandey.flooringmastery.service.FlooringMasteryServiceLayerImpl">
+        <constructor-arg ref="ordersDaoStub"/>
+        <constructor-arg ref="productsDaoStub"/>
+        <constructor-arg ref="taxesDaoStub"/>
+        <constructor-arg ref="backupDaoStub"/>
+    </bean>
+    
 </beans>
