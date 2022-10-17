@@ -71,19 +71,25 @@ public class FlooringMasteryView {
             
             //Read the data into a string
             String dataString = "";
-            for(Order order: list) {
-                dataString += order.getOrderNumber() + "\t";
-                dataString += order.getCustomerName() + "\t";
-                dataString += order.getState() + "\t";
-                dataString += order.getTaxRate()+ "\t";
-                dataString += order.getProductType()+ "\t";
-                dataString += order.getArea()+ "\t";
-                dataString += order.getCostPerSquareFoot()+ "\t\t\t";
-                dataString += order.getLaborCostPerSquareFoot()+ "\t\t";
-                dataString += order.getMaterialCost()+ "\t\t";
-                dataString += order.getLaborCost()+ "\t";
-                dataString += order.getTax() + "\t";
-                dataString += order.getTotal() + "\n";
+            Order order;
+            for(int i=0; i<list.size(); i++) {
+                order = list.get(i);
+                if(order == null) {
+                    dataString += "This order was not retrieved" + "\n";
+                } else {
+                    dataString += order.getOrderNumber() + "\t";
+                    dataString += order.getCustomerName() + "\t";
+                    dataString += order.getState() + "\t";
+                    dataString += order.getTaxRate()+ "\t";
+                    dataString += order.getProductType()+ "\t";
+                    dataString += order.getArea()+ "\t";
+                    dataString += order.getCostPerSquareFoot()+ "\t\t\t";
+                    dataString += order.getLaborCostPerSquareFoot()+ "\t\t";
+                    dataString += order.getMaterialCost()+ "\t\t";
+                    dataString += order.getLaborCost()+ "\t";
+                    dataString += order.getTax() + "\t";
+                    dataString += order.getTotal() + "\n";
+                }
             }
             io.print(dataString);
         }

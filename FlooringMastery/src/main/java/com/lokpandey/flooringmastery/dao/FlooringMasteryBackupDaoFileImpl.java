@@ -35,7 +35,8 @@ public class FlooringMasteryBackupDaoFileImpl implements FlooringMasteryBackupDa
         this.ordersDao = ordersDao;
     }
     
-    private List<Order> readSingleOrdersFileIntoList(String fileName) throws FileNotFoundException {
+    private List<Order> readSingleOrdersFileIntoList(String fileName) 
+            throws FileNotFoundException {
         //write complete code for better SOC
        return ordersDao.selectAllFromOrders(fileName);
     }
@@ -58,8 +59,10 @@ public class FlooringMasteryBackupDaoFileImpl implements FlooringMasteryBackupDa
             }
         }
         
+        allOrdersList.removeIf(x->x==null);
         //Now sort the all orders list using stream and lambda
         List<Order> sortedAllOrdersList = allOrdersList.stream()
+                                                    .filter(x -> x!=null) // remove null objects
                                                     .sorted(Comparator.comparing(Order::getOrderNumber))
                                                     .collect(Collectors.toList());
                 

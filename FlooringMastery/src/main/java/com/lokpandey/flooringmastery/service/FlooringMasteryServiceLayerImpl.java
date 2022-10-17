@@ -4,7 +4,6 @@
  * date: Oct 06, 2022
  * purpose: Class that implements FlooringMasteryServiceLayer interface
  */
-
 package com.lokpandey.flooringmastery.service;
 
 import com.lokpandey.flooringmastery.dao.FlooringMasteryBackupDao;
@@ -25,9 +24,8 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-
 public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLayer {
-    
+
     private final FlooringMasteryOrdersDao ordersDao;
     private final FlooringMasteryTaxesDao taxesDao;
     private final FlooringMasteryBackupDao backupDao;
@@ -38,18 +36,18 @@ public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLa
         this.taxesDao = taxesDao;
         this.backupDao = backupDao;
         this.productsDao = productsDao;
-    } 
-    
+    }
+
     @Override
-    public List<Order> readOrdersFromFile(String dateString) 
+    public List<Order> readOrdersFromFile(String dateString)
             throws FileNotFoundException {
         String fileName = getFileName(dateString);
         return ordersDao.selectAllFromOrders(fileName);
     }
-    
+
     private String getFileName(String dateString) {
         String dateParts[] = dateString.split("-");
-        String fileName = "Orders_"+dateParts[1]+dateParts[2]+dateParts[0]+".txt";
+        String fileName = "Orders_" + dateParts[1] + dateParts[2] + dateParts[0] + ".txt";
         return fileName;
     }
 
@@ -57,14 +55,14 @@ public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLa
     public boolean isFutureDate(String dateString) {
         return LocalDate.parse(dateString).isAfter(LocalDate.now());
     }
-    
+
     //parses date if datestring is valid otherwise throws an exception
     @Override
     public LocalDate parseDate(String dateString) throws InvalidDataException {
         LocalDate date;
         try {
             date = LocalDate.parse(dateString);
-        } catch(DateTimeParseException dtpe) {
+        } catch (DateTimeParseException dtpe) {
             throw new InvalidDataException("Invalid date - " + dateString);
         }
         return date;
@@ -80,7 +78,7 @@ public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLa
     }
 
     @Override
-    public Tax checkStateAndGetTaxObject(String state) 
+    public Tax checkStateAndGetTaxObject(String state)
             throws FileNotFoundException, CannotSellException {
         return taxesDao.selectFromTax(state);
     }
@@ -91,25 +89,31 @@ public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLa
     }
 
     @Override
-    public Product validateAndGetProduct(String productType, List<Product> productList) 
-                                            throws InvalidDataException {
+    public Product validateAndGetProduct(String productType, List<Product> productList)
+            throws InvalidDataException {
         boolean valid = false;
         Product validProduct = null;
-        for(Product product: productList) {
-            if(product.getProductType().equalsIgnoreCase(productType)) {
+        for (Product product : productList) {
+            if (product.getProductType().equalsIgnoreCase(productType)) {
                 valid = true;
                 validProduct = product;
                 break;
             }
         }
-        if(valid) return validProduct;
-        else throw new InvalidDataException("Product type not valid");
+        if (valid) {
+            return validProduct;
+        } else {
+            throw new InvalidDataException("Product type not valid");
+        }
     }
-    
+
     @Override
     public boolean isValidArea(BigDecimal area) throws InvalidDataException {
-        if(area.compareTo(new BigDecimal("100")) >= 0) return true;
-        else throw new InvalidDataException("Area cannot be less than 100");
+        if (area.compareTo(new BigDecimal("100")) >= 0) {
+            return true;
+        } else {
+            throw new InvalidDataException("Area cannot be less than 100");
+        }
     }
 
     @Override
@@ -122,18 +126,18 @@ public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLa
         String fileName = getFileName(dateString);
         ordersDao.createOrder(order, fileName);
     }
-    
+
     @Override
     public int parseOrderNumber(String orderNumberString) throws InvalidDataException {
         int orderNumber;
         try {
             orderNumber = Integer.parseInt(orderNumberString);
-        } catch(NumberFormatException nfe) {
+        } catch (NumberFormatException nfe) {
             throw new InvalidDataException("Cannot parse order number");
         }
-        
-        if(orderNumber <= 0) throw new InvalidDataException("Invalid order number");
-        
+        if (orderNumber <= 0) {
+            throw new InvalidDataException("Invalid order number");
+        }
         return orderNumber;
     }
 
@@ -142,28 +146,30 @@ public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLa
             throws FileNotFoundException, OrderNotFoundException {
         Order foundOrder = null;
         List<Order> orderList = readOrdersFromFile(dateString);
-        for(Order order: orderList) {
-            if(order.getOrderNumber() == orderNumber) {
+        for (Order order : orderList) {
+            if (order != null && order.getOrderNumber() == orderNumber) {
                 foundOrder = order;
                 break;
             }
         }
-        if(foundOrder == null) throw new OrderNotFoundException("The order number does not exist");
-        else return foundOrder;
+        if (foundOrder == null) {
+            throw new OrderNotFoundException("Cannot find the order");
+        } else {
+            return foundOrder;
+        }
     }
-    
+
     @Override
-    public void updateOrder(Order oldOrder, Order newOrder, String dateString) 
+    public void updateOrder(Order oldOrder, Order newOrder, String dateString)
             throws FlooringMasteryPersistenceException {
-        
         try {
             List<Order> orderList = readOrdersFromFile(dateString);
             orderList.remove(oldOrder);
             orderList.add(newOrder);
             //sort my list using streams
             List<Order> sortedOrderList = orderList.stream()
-                                                .sorted(Comparator.comparing(Order::getOrderNumber))
-                                                .collect(Collectors.toList());
+                    .sorted(Comparator.comparing(Order::getOrderNumber))
+                    .collect(Collectors.toList());
             String fileName = getFileName(dateString);
             ordersDao.createOrders(sortedOrderList, fileName);
         } catch (FileNotFoundException ex) {
@@ -172,22 +178,22 @@ public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLa
     }
 
     @Override
-    public void removeOrder(Order order, String dateString) 
+    public void removeOrder(Order order, String dateString)
             throws FlooringMasteryPersistenceException {
-            try {
-                List<Order> orderList = readOrdersFromFile(dateString);
-                orderList.remove(order);
-                String fileName = getFileName(dateString);
-                ordersDao.createOrders(orderList, fileName);
-            } catch(FileNotFoundException fnfe) {
-                throw new FlooringMasteryPersistenceException("Problem with removing order");
-            }
+        try {
+            List<Order> orderList = readOrdersFromFile(dateString);
+            orderList.remove(order);
+            String fileName = getFileName(dateString);
+            ordersDao.createOrders(orderList, fileName);
+        } catch (FileNotFoundException fnfe) {
+            throw new FlooringMasteryPersistenceException("Problem with removing order");
+        }
     }
 
     @Override
-    public List<Order> exportAllOrders() throws FlooringMasteryPersistenceException {
+    public List<Order> exportAllOrders() 
+            throws FlooringMasteryPersistenceException {
         return backupDao.exportAllOrders();
     }
-    
-        
+
 }

@@ -319,7 +319,9 @@ public class FlooringMasteryController {
                 view.displayUpdateSuccessBanner();
             }
             
-        } catch(FileNotFoundException | OrderNotFoundException | FlooringMasteryPersistenceException e) {
+        } catch(FileNotFoundException 
+                    | OrderNotFoundException 
+                    | FlooringMasteryPersistenceException e) {
             view.displayErrorMessage(e.getMessage());
             view.waitForKeyPress();
         }

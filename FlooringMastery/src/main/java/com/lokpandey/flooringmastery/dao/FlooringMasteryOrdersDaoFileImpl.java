@@ -4,7 +4,6 @@
  * date: Oct 06, 2022
  * purpose: Implementation of the FlooringMasteryOrdersDao interface
  */
-
 package com.lokpandey.flooringmastery.dao;
 
 import com.lokpandey.flooringmastery.model.Order;
@@ -25,7 +24,7 @@ public class FlooringMasteryOrdersDaoFileImpl implements FlooringMasteryOrdersDa
 
     private final String ORDERS_FOLDER;
     private static final String DELIMITER = ",";
-    
+
     public FlooringMasteryOrdersDaoFileImpl() {
         ORDERS_FOLDER = "Orders/";
     }
@@ -33,26 +32,24 @@ public class FlooringMasteryOrdersDaoFileImpl implements FlooringMasteryOrdersDa
     public FlooringMasteryOrdersDaoFileImpl(String ORDERS_FOLDER) {
         this.ORDERS_FOLDER = ORDERS_FOLDER;
     }
-    
+
     @Override
-    public List<Order> selectAllFromOrders(String fileName) 
+    public List<Order> selectAllFromOrders(String fileName)
             throws FileNotFoundException {
-        
-        String filePath = ORDERS_FOLDER+fileName;
+        String filePath = ORDERS_FOLDER + fileName;
         Scanner scanner;
         try {
             // Create Scanner for reading the file
-            scanner = new Scanner( 
+            scanner = new Scanner(
                     new BufferedReader(
                             new FileReader(filePath)));
         } catch (FileNotFoundException fnfe) {
-           throw new FileNotFoundException("The file " + fileName + " does not exist");
+            throw new FileNotFoundException("The file " + fileName + " does not exist");
         }
-        
         // currentLine holds the most recent line read from the file
         String currentLine;
         // order holds the most recent student unmarshalled
-        Order order = null;
+        Order order;
         List<Order> orders = new ArrayList<>();
         // Go through file line by line, decoding each line after first line into an 
         // Order object by calling the unmarshallOrder method.
@@ -63,16 +60,16 @@ public class FlooringMasteryOrdersDaoFileImpl implements FlooringMasteryOrdersDa
             currentLine = scanner.nextLine();
             // unmarshall the line into an Order
             order = unmarshallOrder(currentLine);
-            // Put order into the orders list
             orders.add(order);
+            
+            // Put order into the orders list
         }
         // close scanner
         scanner.close();
-        
         return orders;
     }
-    
-    private Order unmarshallOrder(String orderAsText) {
+
+    private Order unmarshallOrder(String orderAsText)  {
         // orderAsText is expecting a line read in from our file.
         // For example, it might look like this:
         // 1,Ada Lovelace,CA,25.00,Tile,249.00,3.50,4.15,871.50,1033.35,476.21,2381.06
@@ -87,32 +84,34 @@ public class FlooringMasteryOrdersDaoFileImpl implements FlooringMasteryOrdersDa
         // -----------------------------------------------------------------------------
         // [0]     [1]     [2] [3]  [4]    [5]   [6]  [7]   [8]    [9]    [10]    [11]
         String[] orderTokens = orderAsText.split(DELIMITER);
-        Integer orderNumber = Integer.parseInt(orderTokens[0]);
-        String customerName = orderTokens[1];
-        String state = orderTokens[2];
-        BigDecimal taxRate = new BigDecimal(orderTokens[3]);
-        String productType = orderTokens[4];
-        BigDecimal area = new BigDecimal(orderTokens[5]);
-        BigDecimal costPerSquareFoot = new BigDecimal(orderTokens[6]);
-        BigDecimal laborCostPerSquareFoot = new BigDecimal(orderTokens[7]);
-        BigDecimal materialCost = new BigDecimal(orderTokens[8]);
-        BigDecimal laborCost = new BigDecimal(orderTokens[9]);
-        BigDecimal tax = new BigDecimal(orderTokens[10]);
-        BigDecimal total = new BigDecimal(orderTokens[11]);
-        
-        Order order = new Order(orderNumber, customerName, state, taxRate, 
-                                productType, area, costPerSquareFoot, laborCostPerSquareFoot,
-                                materialCost, laborCost, tax, total);
+        Order order = null;
+        try {
+            Integer orderNumber = Integer.parseInt(orderTokens[0]);
+            String customerName = orderTokens[1];
+            String state = orderTokens[2];
+            BigDecimal taxRate = new BigDecimal(orderTokens[3]);
+            String productType = orderTokens[4];
+            BigDecimal area = new BigDecimal(orderTokens[5]);
+            BigDecimal costPerSquareFoot = new BigDecimal(orderTokens[6]);
+            BigDecimal laborCostPerSquareFoot = new BigDecimal(orderTokens[7]);
+            BigDecimal materialCost = new BigDecimal(orderTokens[8]);
+            BigDecimal laborCost = new BigDecimal(orderTokens[9]);
+            BigDecimal tax = new BigDecimal(orderTokens[10]);
+            BigDecimal total = new BigDecimal(orderTokens[11]);
+
+            order = new Order(orderNumber, customerName, state, taxRate,
+                productType, area, costPerSquareFoot, laborCostPerSquareFoot,
+                materialCost, laborCost, tax, total);
+        } catch(NumberFormatException nfe) {}
         return order;
-        
+
     }
 
     @Override
-    public int selectOrderNumber() throws FlooringMasteryPersistenceException
-    {
+    public int selectOrderNumber() throws FlooringMasteryPersistenceException {
         String filePath = "Order_Number_Tracker.txt";
         int nextOrderNumber;
-        if(Files.exists(Paths.get(filePath))) {
+        if (Files.exists(Paths.get(filePath))) {
             Scanner scanner = null;
             try {
                 scanner = new Scanner(
@@ -124,35 +123,34 @@ public class FlooringMasteryOrdersDaoFileImpl implements FlooringMasteryOrdersDa
             String currentOrderNumberString = scanner.nextLine();
             nextOrderNumber = Integer.valueOf(currentOrderNumberString) + 1;
             scanner.close();
-        }
-        else {
+        } else {
             nextOrderNumber = 1;
-            }
-        return nextOrderNumber;        
+        }
+        return nextOrderNumber;
     }
-    
-    private void createOrderNumberTrackerFile(int currentOrderNumber) 
+
+    private void createOrderNumberTrackerFile(int currentOrderNumber)
             throws FlooringMasteryPersistenceException {
-        
+
         String filePath = "Order_Number_Tracker.txt";
         PrintWriter out;
         try {
-                out = new PrintWriter(new FileWriter(filePath));
-            } catch (IOException e) {
-                throw new FlooringMasteryPersistenceException("Could not save order number.", e);
-            }
-            
-            out.println(currentOrderNumber);
-            out.flush();
+            out = new PrintWriter(new FileWriter(filePath));
+        } catch (IOException e) {
+            throw new FlooringMasteryPersistenceException("Could not save order number.", e);
+        }
+
+        out.println(currentOrderNumber);
+        out.flush();
     }
 
     @Override
-    public void createOrder(Order order, String fileName) 
-                throws FlooringMasteryPersistenceException {
+    public void createOrder(Order order, String fileName)
+            throws FlooringMasteryPersistenceException {
         String ordersFilePath = ORDERS_FOLDER + fileName;
         PrintWriter out;
-        if(!Files.exists(Paths.get(ordersFilePath))) {
-            try { 
+        if (!Files.exists(Paths.get(ordersFilePath))) {
+            try {
                 out = new PrintWriter(new FileWriter(ordersFilePath));
                 out.println("OrderNumber,CustomerName,State,TaxRate,ProductType,"
                         + "Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,"
@@ -161,27 +159,26 @@ public class FlooringMasteryOrdersDaoFileImpl implements FlooringMasteryOrdersDa
             } catch (IOException ex) {
                 throw new FlooringMasteryPersistenceException("Could not create order file.", ex);
             }
-        }
-        else {
+        } else {
             try {
                 out = new PrintWriter(new FileWriter(ordersFilePath, true));
-            } catch(IOException ex) {
+            } catch (IOException ex) {
                 throw new FlooringMasteryPersistenceException("Could not open order file", ex);
             }
         }
-        
-        String orderString = order.getOrderNumber() + "," +
-                                order.getCustomerName() + "," +
-                                order.getState() + "," + 
-                                order.getTaxRate() + "," +
-                                order.getProductType() + "," +
-                                order.getArea() + "," +
-                                order.getCostPerSquareFoot() + "," +
-                                order.getLaborCostPerSquareFoot() + "," +
-                                order.getMaterialCost() + "," +
-                                order.getLaborCost() + "," +
-                                order.getTax() + "," +
-                                order.getTotal();
+
+        String orderString = order.getOrderNumber() + ","
+                + order.getCustomerName() + ","
+                + order.getState() + ","
+                + order.getTaxRate() + ","
+                + order.getProductType() + ","
+                + order.getArea() + ","
+                + order.getCostPerSquareFoot() + ","
+                + order.getLaborCostPerSquareFoot() + ","
+                + order.getMaterialCost() + ","
+                + order.getLaborCost() + ","
+                + order.getTax() + ","
+                + order.getTotal();
         out.println(orderString);
         out.flush();
         createOrderNumberTrackerFile(order.getOrderNumber());
@@ -189,11 +186,11 @@ public class FlooringMasteryOrdersDaoFileImpl implements FlooringMasteryOrdersDa
     }
 
     @Override
-    public void createOrders(List<Order> sortedOrderList, String fileName) 
+    public void createOrders(List<Order> sortedOrderList, String fileName)
             throws FlooringMasteryPersistenceException {
         String ordersFilePath = ORDERS_FOLDER + fileName;
         PrintWriter out;
-        try { 
+        try {
             //blanking the file
             out = new PrintWriter(new FileWriter(ordersFilePath));
             out.println("OrderNumber,CustomerName,State,TaxRate,ProductType,"
@@ -203,21 +200,20 @@ public class FlooringMasteryOrdersDaoFileImpl implements FlooringMasteryOrdersDa
         } catch (IOException ex) {
             throw new FlooringMasteryPersistenceException("Could not create order file.", ex);
         }
-        
         String orderString;
-        for(Order sortedOrder: sortedOrderList) {
-            orderString = sortedOrder.getOrderNumber() + "," +
-                                sortedOrder.getCustomerName() + "," +
-                                sortedOrder.getState() + "," + 
-                                sortedOrder.getTaxRate() + "," +
-                                sortedOrder.getProductType() + "," +
-                                sortedOrder.getArea() + "," +
-                                sortedOrder.getCostPerSquareFoot() + "," +
-                                sortedOrder.getLaborCostPerSquareFoot() + "," +
-                                sortedOrder.getMaterialCost() + "," +
-                                sortedOrder.getLaborCost() + "," +
-                                sortedOrder.getTax() + "," +
-                                sortedOrder.getTotal();
+        for (Order sortedOrder : sortedOrderList) {
+            orderString = sortedOrder.getOrderNumber() + ","
+                    + sortedOrder.getCustomerName() + ","
+                    + sortedOrder.getState() + ","
+                    + sortedOrder.getTaxRate() + ","
+                    + sortedOrder.getProductType() + ","
+                    + sortedOrder.getArea() + ","
+                    + sortedOrder.getCostPerSquareFoot() + ","
+                    + sortedOrder.getLaborCostPerSquareFoot() + ","
+                    + sortedOrder.getMaterialCost() + ","
+                    + sortedOrder.getLaborCost() + ","
+                    + sortedOrder.getTax() + ","
+                    + sortedOrder.getTotal();
             out.println(orderString);
             out.flush();
         }
