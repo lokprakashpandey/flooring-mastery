@@ -111,7 +111,7 @@ public class FlooringMasteryOrdersDaoFileImpl implements FlooringMasteryOrdersDa
     public int selectOrderNumber() throws FlooringMasteryPersistenceException
     {
         String filePath = "Order_Number_Tracker.txt";
-        int nextOrderNumber = 0;
+        int nextOrderNumber;
         if(Files.exists(Paths.get(filePath))) {
             Scanner scanner = null;
             try {

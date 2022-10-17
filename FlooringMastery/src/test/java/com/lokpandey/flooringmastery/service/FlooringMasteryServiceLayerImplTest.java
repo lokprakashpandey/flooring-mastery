@@ -34,9 +34,82 @@ public class FlooringMasteryServiceLayerImplTest {
     @AfterEach
     public void tearDown() {
     }
+    
+    @Test
+    public void testParseDate() {
+        
+    }
+    
+    @Test
+    public void testIsFutureDate() {
+    }
+    
+    @Test
+    public void testIsValidCustomerName() {
+    }
 
     @Test
-    public void testSomeMethod() {
+    public void testIsValidArea() {
+    }
+    
+    //uses ordersDaoStub
+    //select all orders
+    @Test
+    public void testReadOrdersFromFile() {
+    }
+    
+    //select one order
+    @Test
+    public void testGetOrder() {
+        
+    }
+    
+    //insert an order
+    @Test
+    public void testPlaceOrder() {
+        
+    }
+    
+    //update an order
+    @Test
+    public void testUpdateOrder() {
+    }
+    
+    //delete an order
+    @Test
+    public void testRemoveOrder() {
+    }
+    
+    //uses backupDaoStub
+    @Test
+    public void testExportAllOrders() {
+    
+    }
+    
+    //uses productsDaoStub
+    @Test
+    public void testReadProductList() {
+    }
+    
+    @Test
+    public void testValidateAndGetProduct() {
+    }
+    
+    //uses taxesDaoStub
+    @Test
+    public void checkStateAndGetTaxObject() {
+        
+    }
+    
+    //testing tracker file
+    @Test
+    public void testGetOrderNumber() {
+        
+    }
+    
+    @Test
+    public void testParseOrderNumber() {
+        
     }
     
 }
