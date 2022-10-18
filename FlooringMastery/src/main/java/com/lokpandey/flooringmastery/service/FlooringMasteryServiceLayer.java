@@ -116,7 +116,7 @@ public interface FlooringMasteryServiceLayer {
      * @return int representing the next available order number 
      * @throws FlooringMasteryPersistenceException if file cannot be read
      */
-    int getOrderNumber() throws FlooringMasteryPersistenceException;
+    int getNextOrderNumber() throws FlooringMasteryPersistenceException;
     
     /**
      * Persists the order to an order file

@@ -174,7 +174,7 @@ public class FlooringMasteryController {
         BigDecimal area = getValidArea();
         try {
             //create order
-            Order order = new Order(service.getOrderNumber(),
+            Order order = new Order(service.getNextOrderNumber(),
                                         customerName,
                                         tax.getStateAbbreviation(),
                                         tax.getTaxRate(),

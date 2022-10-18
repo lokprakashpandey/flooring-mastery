@@ -9,6 +9,8 @@ package com.lokpandey.flooringmastery.dao;
 
 import com.lokpandey.flooringmastery.model.Product;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,7 +18,12 @@ public class FlooringMasteryProductsDaoStubImpl implements FlooringMasteryProduc
 
     @Override
     public List<Product> selectAllFromProducts() throws FileNotFoundException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Product> productList = new ArrayList<>();
+        productList.add(new Product("Carpet", new BigDecimal("2.25"), new BigDecimal("2.10")));
+        productList.add(new Product("Laminate", new BigDecimal("1.75"), new BigDecimal("2.10")));
+        productList.add(new Product("Tile", new BigDecimal("3.50"), new BigDecimal("4.15")));
+        productList.add(new Product("Wood", new BigDecimal("5.15"), new BigDecimal("4.75")));
+        return productList;
     }
 
 }

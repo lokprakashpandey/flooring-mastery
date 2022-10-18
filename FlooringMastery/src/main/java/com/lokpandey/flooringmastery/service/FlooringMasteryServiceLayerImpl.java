@@ -117,7 +117,7 @@ public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLa
     }
 
     @Override
-    public int getOrderNumber() throws FlooringMasteryPersistenceException {
+    public int getNextOrderNumber() throws FlooringMasteryPersistenceException {
         return ordersDao.selectOrderNumber();
     }
 
@@ -159,6 +159,9 @@ public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLa
         }
     }
 
+    //For updating order, I read the orders on that date into a list,
+    //then update the list in memory for the particular order and finally
+    //rewrite the file with the updated list
     @Override
     public void updateOrder(Order oldOrder, Order newOrder, String dateString)
             throws FlooringMasteryPersistenceException {
@@ -171,7 +174,7 @@ public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLa
                     .sorted(Comparator.comparing(Order::getOrderNumber))
                     .collect(Collectors.toList());
             String fileName = getFileName(dateString);
-            ordersDao.createOrders(sortedOrderList, fileName);
+            ordersDao.persistOrders(sortedOrderList, fileName);
         } catch (FileNotFoundException ex) {
             throw new FlooringMasteryPersistenceException("Problem with updating order");
         }
@@ -184,7 +187,7 @@ public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLa
             List<Order> orderList = readOrdersFromFile(dateString);
             orderList.remove(order);
             String fileName = getFileName(dateString);
-            ordersDao.createOrders(orderList, fileName);
+            ordersDao.persistOrders(orderList, fileName);
         } catch (FileNotFoundException fnfe) {
             throw new FlooringMasteryPersistenceException("Problem with removing order");
         }

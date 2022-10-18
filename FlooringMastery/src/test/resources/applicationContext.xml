@@ -45,7 +45,9 @@
     <bean id="taxesDaoStub" 
             class="com.lokpandey.flooringmastery.dao.FlooringMasteryTaxesDaoStubImpl"/>
     <bean id="backupDaoStub"
-            class="com.lokpandey.flooringmastery.dao.FlooringMasteryBackupDaoStubImpl"/>
+            class="com.lokpandey.flooringmastery.dao.FlooringMasteryBackupDaoStubImpl">
+        <constructor-arg ref="ordersDaoStub"/>
+    </bean>
     <bean id="serviceLayer"
             class="com.lokpandey.flooringmastery.service.FlooringMasteryServiceLayerImpl">
         <constructor-arg ref="ordersDaoStub"/>
@@ -54,4 +56,14 @@
         <constructor-arg ref="backupDaoStub"/>
     </bean>
     
+    <!-- Actual implementation to replace stub implementation -->
+    <!-- 
+    <bean id="serviceLayer"
+            class="com.lokpandey.flooringmastery.service.FlooringMasteryServiceLayerImpl">
+        <constructor-arg ref="ordersDao"/>
+        <constructor-arg ref="productsDao"/>
+        <constructor-arg ref="taxesDao"/>
+        <constructor-arg ref="backupDao"/>
+    </bean>
+    -->
 </beans>

@@ -59,14 +59,14 @@ public interface FlooringMasteryOrdersDao {
             throws FlooringMasteryPersistenceException;
     
     /**
-     * Creates the orders file and persists all the orders information into it
+     * Updates the orders file and persists all the orders information into it
      *
      * @param List<Order> list of order to persist to file 
      * @param String fileName on which to persist Order
      * @return void 
      * @throws FlooringMasteryPersistenceException when order information cannot be persisted
     */
-    public void createOrders(List<Order> order, String fileName) 
+    public void persistOrders(List<Order> order, String fileName) 
             throws FlooringMasteryPersistenceException;
     
     

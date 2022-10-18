@@ -186,7 +186,7 @@ public class FlooringMasteryOrdersDaoFileImpl implements FlooringMasteryOrdersDa
     }
 
     @Override
-    public void createOrders(List<Order> sortedOrderList, String fileName)
+    public void persistOrders(List<Order> sortedOrderList, String fileName)
             throws FlooringMasteryPersistenceException {
         String ordersFilePath = ORDERS_FOLDER + fileName;
         PrintWriter out;
