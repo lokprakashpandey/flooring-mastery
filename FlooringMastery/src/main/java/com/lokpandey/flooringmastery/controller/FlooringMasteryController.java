@@ -12,7 +12,7 @@ import com.lokpandey.flooringmastery.model.Order;
 import com.lokpandey.flooringmastery.model.Product;
 import com.lokpandey.flooringmastery.model.Tax;
 import com.lokpandey.flooringmastery.service.CannotSellException;
-import com.lokpandey.flooringmastery.service.FlooringMasteryServiceLayerImpl;
+import com.lokpandey.flooringmastery.service.FlooringMasteryServiceLayer;
 import com.lokpandey.flooringmastery.service.InvalidDataException;
 import com.lokpandey.flooringmastery.service.OrderNotFoundException;
 import com.lokpandey.flooringmastery.view.FlooringMasteryView;
@@ -24,9 +24,9 @@ import java.util.List;
 public class FlooringMasteryController {
     
     private final FlooringMasteryView view;
-    private final FlooringMasteryServiceLayerImpl service;
+    private final FlooringMasteryServiceLayer service;
 
-    public FlooringMasteryController(FlooringMasteryView view, FlooringMasteryServiceLayerImpl service) {
+    public FlooringMasteryController(FlooringMasteryView view, FlooringMasteryServiceLayer service) {
         this.view = view;
         this.service = service;
     }

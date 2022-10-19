@@ -66,7 +66,7 @@ public interface FlooringMasteryOrdersDao {
      * @return void 
      * @throws FlooringMasteryPersistenceException when order information cannot be persisted
     */
-    public void persistOrders(List<Order> order, String fileName) 
+    public void persistOrders(List<Order> orderList, String fileName) 
             throws FlooringMasteryPersistenceException;
     
     

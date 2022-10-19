@@ -57,13 +57,13 @@
     </bean>
     
     <!-- Actual implementation to replace stub implementation -->
-    <!-- 
-    <bean id="serviceLayer"
+     
+<!--<bean id="serviceLayer"
             class="com.lokpandey.flooringmastery.service.FlooringMasteryServiceLayerImpl">
         <constructor-arg ref="ordersDao"/>
         <constructor-arg ref="productsDao"/>
         <constructor-arg ref="taxesDao"/>
         <constructor-arg ref="backupDao"/>
-    </bean>
-    -->
+    </bean>-->
+    
 </beans>
