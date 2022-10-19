@@ -70,7 +70,7 @@ public class FlooringMasteryOrdersDaoStubImpl implements FlooringMasteryOrdersDa
 
     @Override
     public void createOrder(Order order, String fileName) throws FlooringMasteryPersistenceException {
-        if (order != null && order.getOrderNumber() == currentMaxOrderNumber + 1) {
+        if (order != null) {
             //persist order to file named fileName
             List<Order> list = new ArrayList<>();
             Set<String> keys = ordersMap.keySet();
@@ -82,7 +82,8 @@ public class FlooringMasteryOrdersDaoStubImpl implements FlooringMasteryOrdersDa
             }
             list.add(order);
             ordersMap.put(fileName, list);
-            currentMaxOrderNumber++;//this number should be preserved for subsequent orders
+            currentMaxOrderNumber = order.getOrderNumber();
+            //this number should be preserved for subsequent orders
         }
     }
 

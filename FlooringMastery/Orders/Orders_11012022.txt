@@ -1,4 +1,0 @@
-OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total
-4,lok prakash pandey,KY,6.00,Carpet,100,2.25,2.10,225.00,210.00,26.10,461.10
-5,Acme, Inc.,KY,6.00,Wood,200,5.15,4.75,1030.00,950.00,118.80,2098.80
-6,Ram Pandey,TX,4.45,Tile,250,3.50,4.15,875.00,1037.50,85.11,1997.61

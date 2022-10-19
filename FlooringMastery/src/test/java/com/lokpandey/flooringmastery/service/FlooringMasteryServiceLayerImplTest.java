@@ -13,6 +13,9 @@ import com.lokpandey.flooringmastery.model.Tax;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -31,21 +34,21 @@ public class FlooringMasteryServiceLayerImplTest {
     private FlooringMasteryServiceLayer service;
     
     public FlooringMasteryServiceLayerImplTest() {
-    }
-    
-    @BeforeEach
-    public void setUp() {
     ApplicationContext ctx = 
                     new ClassPathXmlApplicationContext("applicationContext.xml");
     service = ctx.getBean("serviceLayer", FlooringMasteryServiceLayerImpl.class);
     }
     
+    @BeforeEach
+    public void setUp() {
+    }
+    
     @AfterEach
     public void tearDown() throws IOException {
-//        Path path = Paths.get("Orders/Orders_12202040.txt");
-//        if(Files.exists(path)) {
-//            Files.delete(path);
-//        }
+        Path path = Paths.get("Orders/Orders_12202040.txt");
+        if(Files.exists(path)) {
+            Files.delete(path);
+        }
     }
     
     @Test
@@ -121,7 +124,7 @@ public class FlooringMasteryServiceLayerImplTest {
     @Test
     public void testPlaceOrderAndGetOrderNumber() throws FlooringMasteryPersistenceException {
         //arrange valid data
-        Order order = new Order(4                          , "Some name"
+        Order order = new Order(100                          , "Some name"
                                 , "TX"                     , new BigDecimal("4.45")
                                 , "Tile"                   , new BigDecimal("100.00")
                                 , new BigDecimal("3.50")   , new BigDecimal("4.15")
@@ -140,14 +143,14 @@ public class FlooringMasteryServiceLayerImplTest {
     public void testUpdateAndSelectOrder() 
             throws FileNotFoundException, FlooringMasteryPersistenceException {
         String dateString = "2040-12-20";
-        Order oldOrder = new Order(4                       , "Doctor Who"
+        Order oldOrder = new Order(200                       , "Doctor Who"
                                 , "WA"                     , new BigDecimal("9.25")
                                 , "Wood"                   , new BigDecimal("243.00")
                                 , new BigDecimal("5.15")   , new BigDecimal("4.75")
                                 , new BigDecimal("1251.45"), new BigDecimal("1154.25")
                                 , new BigDecimal("216.51") , new BigDecimal("2622.21"));
        service.placeOrder(oldOrder, dateString);
-       Order newOrder = new Order( 4                       , "Engineer Who"
+       Order newOrder = new Order( 200                       , "Engineer Who"
                                 , "WA"                     , new BigDecimal("9.25")
                                 , "Wood"                   , new BigDecimal("243.00")
                                 , new BigDecimal("5.15")   , new BigDecimal("4.75")
@@ -164,7 +167,7 @@ public class FlooringMasteryServiceLayerImplTest {
     public void testRemoveOrder() throws FlooringMasteryPersistenceException, FileNotFoundException {
         //arrange
         String dateString = "2040-12-20";
-        Order order = new Order(4                       , "Doctor Who"
+        Order order = new Order(300                       , "Doctor Who"
                                 , "WA"                     , new BigDecimal("9.25")
                                 , "Wood"                   , new BigDecimal("243.00")
                                 , new BigDecimal("5.15")   , new BigDecimal("4.75")
@@ -217,13 +220,6 @@ public class FlooringMasteryServiceLayerImplTest {
             service.checkStateAndGetTaxObject("LA");
             fail("Exception must have been raised");
         } catch(CannotSellException cse) {}
-    }
-    
-    //testing tracker file
-    @Test
-    public void testGetNextOrderNumber() throws FlooringMasteryPersistenceException {
-        int nextOrderNum = service.getNextOrderNumber();
-        assertEquals(nextOrderNum, 4, "Must be 4 with three orders provided");
     }
 
 }
