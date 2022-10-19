@@ -9,6 +9,7 @@ package com.lokpandey.flooringmastery.service;
 import com.lokpandey.flooringmastery.dao.FlooringMasteryPersistenceException;
 import com.lokpandey.flooringmastery.model.Order;
 import com.lokpandey.flooringmastery.model.Product;
+import com.lokpandey.flooringmastery.model.Tax;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -193,7 +194,6 @@ public class FlooringMasteryServiceLayerImplTest {
     }
     
     //uses productsDaoStub
-    
     @Test
     public void testValidateAndGetProduct() throws FileNotFoundException, InvalidDataException {
         //act
@@ -210,14 +210,20 @@ public class FlooringMasteryServiceLayerImplTest {
     
     //uses taxesDaoStub
     @Test
-    public void checkStateAndGetTaxObject() {
-        
+    public void checkStateAndGetTaxObject() throws FileNotFoundException, CannotSellException {
+        assertTrue(service.checkStateAndGetTaxObject("TX") instanceof Tax, 
+                            "TX is a state where selling is allowed");
+        try {
+            service.checkStateAndGetTaxObject("LA");
+            fail("Exception must have been raised");
+        } catch(CannotSellException cse) {}
     }
     
     //testing tracker file
     @Test
-    public void testGetOrderNumber() {
-        
+    public void testGetNextOrderNumber() throws FlooringMasteryPersistenceException {
+        int nextOrderNum = service.getNextOrderNumber();
+        assertEquals(nextOrderNum, 4, "Must be 4 with three orders provided");
     }
 
 }
