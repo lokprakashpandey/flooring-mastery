@@ -8,6 +8,7 @@ package com.lokpandey.flooringmastery.service;
 
 import com.lokpandey.flooringmastery.dao.FlooringMasteryPersistenceException;
 import com.lokpandey.flooringmastery.model.Order;
+import com.lokpandey.flooringmastery.model.Product;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -25,18 +27,18 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class FlooringMasteryServiceLayerImplTest {
     
-    private final FlooringMasteryServiceLayer service;
+    private FlooringMasteryServiceLayer service;
     
     public FlooringMasteryServiceLayerImplTest() {
-        ApplicationContext ctx = 
-                    new ClassPathXmlApplicationContext("applicationContext.xml");
-        service = ctx.getBean("serviceLayer", FlooringMasteryServiceLayerImpl.class);
     }
     
-//    @BeforeEach
-//    public void setUp() {
-//    }
-//    
+    @BeforeEach
+    public void setUp() {
+    ApplicationContext ctx = 
+                    new ClassPathXmlApplicationContext("applicationContext.xml");
+    service = ctx.getBean("serviceLayer", FlooringMasteryServiceLayerImpl.class);
+    }
+    
     @AfterEach
     public void tearDown() throws IOException {
 //        Path path = Paths.get("Orders/Orders_12202040.txt");
@@ -130,7 +132,6 @@ public class FlooringMasteryServiceLayerImplTest {
         assertEquals(orderNum, order.getOrderNumber()+1, 
                             "The next order number must be the order number "
                                     + "of last order inserted + 1");
-        
     }
     
     //update an order
@@ -138,14 +139,14 @@ public class FlooringMasteryServiceLayerImplTest {
     public void testUpdateAndSelectOrder() 
             throws FileNotFoundException, FlooringMasteryPersistenceException {
         String dateString = "2040-12-20";
-        Order oldOrder = new Order(5                       , "Doctor Who"
+        Order oldOrder = new Order(4                       , "Doctor Who"
                                 , "WA"                     , new BigDecimal("9.25")
                                 , "Wood"                   , new BigDecimal("243.00")
                                 , new BigDecimal("5.15")   , new BigDecimal("4.75")
                                 , new BigDecimal("1251.45"), new BigDecimal("1154.25")
                                 , new BigDecimal("216.51") , new BigDecimal("2622.21"));
        service.placeOrder(oldOrder, dateString);
-       Order newOrder = new Order( 5                       , "Engineer Who"
+       Order newOrder = new Order( 4                       , "Engineer Who"
                                 , "WA"                     , new BigDecimal("9.25")
                                 , "Wood"                   , new BigDecimal("243.00")
                                 , new BigDecimal("5.15")   , new BigDecimal("4.75")
@@ -159,22 +160,52 @@ public class FlooringMasteryServiceLayerImplTest {
     
     //delete an order
     @Test
-    public void testRemoveOrder() {
+    public void testRemoveOrder() throws FlooringMasteryPersistenceException, FileNotFoundException {
+        //arrange
+        String dateString = "2040-12-20";
+        Order order = new Order(4                       , "Doctor Who"
+                                , "WA"                     , new BigDecimal("9.25")
+                                , "Wood"                   , new BigDecimal("243.00")
+                                , new BigDecimal("5.15")   , new BigDecimal("4.75")
+                                , new BigDecimal("1251.45"), new BigDecimal("1154.25")
+                                , new BigDecimal("216.51") , new BigDecimal("2622.21"));
+        //act
+        service.placeOrder(order, dateString);
+        //assert
+        assertEquals(service.readOrdersFromFile(dateString).size(), 1, "The size must be 1");
+        //act
+        service.removeOrder(order, dateString);
+        //assert
+        assertEquals(service.readOrdersFromFile(dateString).size(), 0, "The size must be 0");
     }
     
     //uses backupDaoStub
     @Test
-    public void testExportAllOrders() {
-    
+    public void testExportAllOrders() throws FlooringMasteryPersistenceException, FileNotFoundException {
+        List<Order> ordersFromFile1 = service.readOrdersFromFile("2013-06-01");
+        List<Order> ordersFromFile2 = service.readOrdersFromFile("2013-06-02");
+        List<Order> allOrders = service.exportAllOrders();
+        assertTrue(allOrders.containsAll(ordersFromFile1), 
+                "All orders must contain orders from file1");
+        assertTrue(allOrders.containsAll(ordersFromFile2), 
+                "All orders must contain orders from all file2");
+        
     }
     
     //uses productsDaoStub
-    @Test
-    public void testReadProductList() {
-    }
     
     @Test
-    public void testValidateAndGetProduct() {
+    public void testValidateAndGetProduct() throws FileNotFoundException, InvalidDataException {
+        //act
+        List<Product> productList = service.readProductList();
+        //assert
+        assertTrue(service.validateAndGetProduct("Carpet", productList) instanceof Product,
+                                                    "Carpet is a valid product type");
+        try {
+            service.validateAndGetProduct("Iron", productList);
+            fail("Exception must have been raised");
+        } catch(InvalidDataException ide) {}
+        
     }
     
     //uses taxesDaoStub
@@ -188,10 +219,5 @@ public class FlooringMasteryServiceLayerImplTest {
     public void testGetOrderNumber() {
         
     }
-    
-    @Test
-    public void testParseOrderNumber() {
-        
-    }
-    
+
 }

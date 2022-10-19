@@ -45,18 +45,22 @@ public class FlooringMasteryOrdersDaoStubImpl implements FlooringMasteryOrdersDa
         List<Order> list2 = new ArrayList<>();
         list2.add(order2);
         list2.add(order3);
-        ordersMap.put("Orders_06012013", list1);
-        ordersMap.put("Orders_06012013", list2);
+        ordersMap.put("Orders_06012013.txt", list1);
+        ordersMap.put("Orders_06022013.txt", list2);
     }
 
     @Override
     public List<Order> selectAllFromOrders(String fileName) throws FileNotFoundException {
+        boolean found = false;
         Set<String> keys = ordersMap.keySet();
-        if (!keys.contains(fileName)) {
-            throw new FileNotFoundException("File does not exist");
-        } else {
-            return ordersMap.get(fileName);
+        for(String key: keys) {
+            if(key.equalsIgnoreCase(fileName)) {
+                found = true;
+                break;
+            }
         }
+        if(found)   return ordersMap.get(fileName);
+        else        throw new FileNotFoundException("File does not exist");
     }
 
     @Override
@@ -69,19 +73,23 @@ public class FlooringMasteryOrdersDaoStubImpl implements FlooringMasteryOrdersDa
         if (order != null && order.getOrderNumber() == currentMaxOrderNumber + 1) {
             //persist order to file named fileName
             List<Order> list = new ArrayList<>();
-            if (ordersMap.keySet().contains(fileName)) {
-                list = ordersMap.get(fileName);
+            Set<String> keys = ordersMap.keySet();
+            for(String key: keys) {
+                if(key.equalsIgnoreCase(fileName)) {
+                    list = ordersMap.get(fileName);
+                    break;
+                }
             }
             list.add(order);
             ordersMap.put(fileName, list);
-            currentMaxOrderNumber++;
+            currentMaxOrderNumber++;//this number should be preserved for subsequent orders
         }
     }
 
     @Override
     public void persistOrders(List<Order> orderList, String fileName) throws FlooringMasteryPersistenceException {
         //write new list to file
-        ordersMap.put(fileName, orderList);
+        ordersMap.replace(fileName, orderList);
     }
 
 }

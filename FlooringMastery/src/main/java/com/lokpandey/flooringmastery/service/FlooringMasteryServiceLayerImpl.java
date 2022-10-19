@@ -176,7 +176,7 @@ public class FlooringMasteryServiceLayerImpl implements FlooringMasteryServiceLa
             String fileName = getFileName(dateString);
             ordersDao.persistOrders(sortedOrderList, fileName);
         } catch (FileNotFoundException ex) {
-            throw new FlooringMasteryPersistenceException("Problem with updating order");
+            throw new FlooringMasteryPersistenceException("Problem with updating order", ex);
         }
     }
 
